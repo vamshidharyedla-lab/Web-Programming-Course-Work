@@ -1,6 +1,9 @@
 # FindIt — Campus Lost & Found
 
-A web app for campus students to report lost and found items, and automatically find possible matches between them.
+As part of our Web Programming course, we developed FindIt, a Lost & Found web application to learn and implement full-stack web development concepts. The project allows users to report lost and found items, manage reports, and identify potential matches between them.
+
+We used HTML, CSS, JavaScript, Node.js, Express.js, and MongoDB to build the application, while implementing features such as user authentication, database management, and item matching. Through this project, we gained hands-on experience in developing a complete web application and applying web programming concepts to solve a real-world problem.
+
 
 ## What it does
 
