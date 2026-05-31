@@ -1,85 +1,92 @@
-# FindIt — Smart Campus Lost & Found
+# FindIt — Campus Lost & Found
 
-A complete, production-quality web application for managing lost and found items on a university campus.
+A web app for campus students to report lost and found items, and automatically find possible matches between them.
 
----
+## What it does
 
-## 🚀 Getting Started
+- Students can report a lost item or an item they found
+- The app compares all reports and shows possible matches (e.g. someone lost a black laptop, someone found a black laptop in the same building)
+- Matching is based on category, keywords, location, color, and date
+- Users can log in, view their own reports, and mark items as resolved
 
-Just open `index.html` in any modern browser — no server or install needed!
+## Tech stack
 
-**Demo credentials:** `demo@campus.edu` / `demo123`
+- **Frontend:** Plain HTML, CSS, and JavaScript (no frameworks)
+- **Backend:** Node.js with Express
+- **Database:** MongoDB
+- **Auth:** JWT tokens + bcrypt password hashing
 
----
-
-## 📁 Project Structure
+## Project structure
 
 ```
-lost-found/
-├── index.html          # All pages (SPA — single HTML file)
-├── css/
-│   └── styles.css      # Complete design system + responsive styles
-├── js/
-│   ├── data.js         # LocalStorage data layer + 10 seed items
-│   ├── matcher.js      # ⭐ Matching algorithm (Jaccard, bigram, fuzzy)
-│   └── app.js          # SPA router, all page controllers, auth
-└── README.md
+FindIt-Lost-Found/
+├── frontend/
+│   ├── index.html          Main page (single-page app, all views here)
+│   ├── css/
+│   │   └── styles.css      All styles
+│   └── js/
+│       ├── data.js         API client (talks to the backend)
+│       ├── matcher.js      Matching logic (runs in browser)
+│       └── app.js          Page rendering and navigation
+└── backend/
+    ├── server.js           Express server entry point
+    ├── package.json
+    ├── .env                Environment variables (port, DB URL, JWT secret)
+    ├── models/
+    │   ├── User.js         User schema
+    │   └── Item.js         Item schema
+    ├── routes/
+    │   ├── auth.js         Login, register, demo login
+    │   └── items.js        CRUD for items + matching endpoints
+    └── utils/
+        └── matcher.js      Matching logic (runs on server)
 ```
 
----
+## How to run
 
-## ✨ Features
+**Requirements:** Node.js and MongoDB installed locally.
 
-### Pages
-| Page | Description |
-|------|-------------|
-| **Feed** | Browse all lost/found items with live search + filters |
-| **Matches** | AI-matched pairs with score breakdown |
-| **Report** | Form to submit a lost or found item |
-| **Profile** | User dashboard with their items |
-| **Auth** | Sign in / Sign up with LocalStorage persistence |
+1. Install backend dependencies:
+   ```
+   cd backend
+   npm install
+   ```
 
-### Matching Algorithm
-Located in `js/matcher.js` — the technical heart of the project.
+2. Start MongoDB (if it is not already running):
+   ```
+   mongod
+   ```
 
-**Scoring weights:**
-- 🏷️ Category match — 30%
-- 🔤 Keyword Jaccard similarity — 25%
-- 📍 Location token overlap — 20%
-- 🎨 Color match — 10%
-- 📅 Date proximity (5-day window) — 10%
-- 📝 Title bigram similarity — 5%
+3. Start the backend server:
+   ```
+   npm run dev
+   ```
+   The server runs on http://localhost:5000
 
-### Authentication
-- Sign up / login with campus email
-- Passwords stored as Base64 (suitable for demo)
-- Session persisted in LocalStorage
+4. Open `frontend/index.html` in your browser directly, or serve it with a simple HTTP server:
+   ```
+   npx serve frontend
+   ```
 
----
+## Demo account
 
-## 🌱 Seed Data
+Use these credentials to log in without registering:
+- Email: `demo@campus.edu`
+- Password: `demo123`
 
-10 pre-loaded items (5 lost / 5 found pairs) with realistic matches:
-- Black HP Laptop ↔ Black Laptop Found
-- Blue Hydro Flask ↔ Water Bottle  
-- Student ID Card ↔ ID Card Found
-- AirPods Pro ↔ Earbuds Case
-- Red Umbrella ↔ Umbrella Left Behind
+Or just click "Continue as Demo User" on the login page.
 
----
+## How the matching works
 
-## 🎓 Demo Day Tips
+Each lost item is compared against each found item using a weighted score:
 
-1. Open the app and click "Continue as Demo User"
-2. Navigate to **Matches** to show the algorithm in action
-3. Report a new item to show real-time matching
-4. Click any match card to view the score breakdown bars
+| Factor   | Weight | How it is measured |
+|----------|--------|--------------------|
+| Category | 30%    | Same category = full score |
+| Keywords | 25%    | Fraction of shared keywords (Jaccard) |
+| Location | 20%    | Word overlap between location strings |
+| Color    | 10%    | Exact color match |
+| Date     | 10%    | Within 5 days = full score, fades to 0 |
+| Title    | 5%     | Character-pair similarity |
 
----
-
-## 🛠 Tech Stack
-
-- Vanilla HTML5, CSS3, JavaScript (ES6+)
-- Google Fonts: Syne + DM Sans
-- LocalStorage for persistence
-- Zero dependencies, zero build step
+Any pair scoring 30 or above shows up on the Matches page.
