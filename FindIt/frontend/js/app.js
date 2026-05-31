@@ -1,4 +1,4 @@
-// Main app controller — handles navigation and rendering each page
+// Main app controller — handles navigation and rendering each pages
 
 const App = {
   currentPage: 'feed',
